@@ -17,3 +17,17 @@ sudo sysctl vm.swappiness=10
 sudo swapon /swapfile
 echo '/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
 
+if [ "$(which curl)" == "" ]; then
+	sudo apt-get install curl -y
+fi
+
+# Install certbot-auto
+curl -o /tmp/certbot-auto https://dl.eff.org/certbot-auto
+chmod a+x /tmp/certbot-auto
+sudo cp /tmp/certbot-auto /usr/local/bin/certbot-auto
+sudo mkdir -p /var/www/certs
+
+# Run the docker registry in its default configuration
+docker run -d -p 5000:5000 --restart=always \
+	-v `pwd`/data:/var/lib/registry \
+  registry:2

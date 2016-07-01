@@ -3,7 +3,7 @@
 		{
 			"type": "digitalocean",
 			"api_token": "{{user `api_token`}}",
-			"region": "{{user `region`}}",
+			"region": "TOR1",
 			"size": "512mb",
 			"image": "ubuntu-14-04-x64"
 		}
@@ -12,6 +12,11 @@
 		{
 			"type": "shell",
 			"script": "provision.sh"
+		},
+		{
+			"type": "file",
+			"source": "certbot-cron",
+			"destination": "/usr/local/bin/certbot-cron"
 		}
 	]
 }

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# This script enables the cron job for renewing
+# the certificates
+echo '
+*/30 *  * * * root  run-parts /etc/cron.by-hourly
+' | sudo tee -a /etc/crontab
+
+echo '#!/usr/bin/env bash
+certbot-auto renew --quiet --no-self-upgrade
+' | sudo tee /etc/cron.by-hourly/certbot
+
+sudo chmod +x /etc/cron.by-hourly/certbot
