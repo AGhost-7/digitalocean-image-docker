@@ -1,14 +1,73 @@
 #!/usr/bin/env bash
 
-sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' | sudo tee /etc/apt/sources.list.d/docker.list
-sudo apt-get update
-sudo apt-get install docker-engine python-dev python-pip -y
-sudo pip install docker-compose
-# installer already adds the docker group, just need to add current user to group
-sudo usermod -aG docker $USER
-sudo service docker restart
 
+set -e
+
+sudo apt-get update
+
+
+# {{{ docker & compose
+
+sudo apt-get install -y apt-transport-https curl
+curl https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add --
+echo 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable' | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt-get update
+sudo apt-get install docker-ce=17.09.0~ce-0~ubuntu -y
+sudo systemctl enable docker
+
+sudo apt-get install python-pip -y
+sudo pip install docker-compose
+# }}}
+
+# {{{ misc utils
+
+# For dig, etc.
+sudo apt-get install -y --no-install-recommends dnsutils
+
+# Needed for netstat, etc.
+sudo apt-get install -y --no-install-recommends net-tools
+
+# Packet sniffer for debugging.
+sudo apt-get install -y --no-install-recommends tcpflow
+
+# Very usefull for finding issues coming from syscalls
+sudo apt-get install -y --no-install-recommends strace
+
+# a better top
+sudo apt-get install -y --no-install-recommends htop
+
+# editing tool
+sudo apt-get install -y --no-install-recommends vim
+
+# terminal multiplexing
+sudo apt-get install -y --no-install-recommends tmux
+
+# email client
+sudo apt-get install -y --no-install-recommends swaks
+
+# }}}
+
+# {{{ docker gc
+
+sudo curl -L -o /usr/local/bin/docker-gc \
+	https://raw.githubusercontent.com/spotify/docker-gc/bb9580df7205da8498f41a5be05aeaeeff012f54/docker-gc
+
+docker_gc_sha='98ea7fa6630aa2e31d5da58033b07cf09cdbd94b0847c167631e346c1fbc2586'
+if [ "$(shasum -a 256 /usr/local/bin/docker-gc | cut -d ' ' -f 1)" != "$docker_gc_sha" ]; then
+	echo 'Checksum for docker-gc does not match'
+	exit 1
+fi
+
+sudo chmod +x /usr/local/bin/docker-gc
+
+sudo tee /etc/cron.hourly/docker-gc <<CRON
+#!/usr/bin/env bash
+FORCE_IMAGE_REMOVAL=1 MINIMUM_IMAGES_TO_SAVE=10 /usr/local/bin/docker-gc
+CRON
+sudo chmod +x /etc/cron.hourly/docker-gc
+# }}}
+
+# {{{ swap
 # Add a small swap. 512mb of ram isnt much to play with tbh.
 sudo fallocate -l 500M /swapfile
 sudo chmod 600 /swapfile
@@ -16,18 +75,4 @@ sudo mkswap /swapfile
 sudo sysctl vm.swappiness=10
 sudo swapon /swapfile
 echo '/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
-
-if [ "$(which curl)" == "" ]; then
-	sudo apt-get install curl -y
-fi
-
-# Install certbot-auto
-curl -o /tmp/certbot-auto https://dl.eff.org/certbot-auto
-chmod a+x /tmp/certbot-auto
-sudo cp /tmp/certbot-auto /usr/local/bin/certbot-auto
-sudo mkdir -p /var/www/certs
-
-# Run the docker registry in its default configuration
-docker run -d -p 5000:5000 --restart=always \
-	-v `pwd`/data:/var/lib/registry \
-  registry:2
+# }}}

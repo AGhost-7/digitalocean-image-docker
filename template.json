@@ -5,18 +5,14 @@
 			"api_token": "{{user `api_token`}}",
 			"region": "TOR1",
 			"size": "512mb",
-			"image": "ubuntu-14-04-x64"
+			"image": "ubuntu-16-04-x64",
+			"ssh_username": "root"
 		}
 	],
 	"provisioners": [
 		{
 			"type": "shell",
 			"script": "provision.sh"
-		},
-		{
-			"type": "file",
-			"source": "certbot-cron",
-			"destination": "/usr/local/bin/certbot-cron"
 		}
 	]
 }
