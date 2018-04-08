@@ -12,6 +12,11 @@
 	"provisioners": [
 		{
 			"type": "file",
+			"source": "journald.conf",
+			"destination": "/etc/systemd/journald.conf"
+		},
+		{
+			"type": "file",
 			"source": "netdata.service",
 			"destination": "/tmp/netdata.service"
 		},
