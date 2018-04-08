@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# script used to dynamically determine private interfaces
+
+private-ip() {
+	if [[ "$1" == "192.168."* ]] || [[ "$1" == "10."* ]] || [ "$1" == "127.0.0.1" ]; then
+		return 0
+	fi
+
+	if [[ "$1" == "172."* ]]; then
+		local n
+		n="$(cut -d . -f 2 <<<"$1")"
+		if [ "$n" -ge 16 ] && [ "$n" -le 31 ]; then
+			return 0
+		fi
+	fi
+
+	return 1
+}
+
+ifconfig | awk '$1 == "inet" { print $2 }' | cut -d : -f 2 | while read line; do
+	if private-ip "$line"; then
+		echo "$line"
+	fi
+done | xargs

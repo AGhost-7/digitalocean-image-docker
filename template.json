@@ -11,8 +11,23 @@
 	],
 	"provisioners": [
 		{
+			"type": "file",
+			"source": "netdata.service",
+			"destination": "/tmp/netdata.service"
+		},
+		{
+			"type": "file",
+			"source": "private-if",
+			"destination": "/usr/sbin/private-if"
+		},
+		{
 			"type": "shell",
 			"script": "provision.sh"
+		},
+		{
+			"type": "file",
+			"source": "netdata.conf",
+			"destination": "/etc/netdata/netdata.conf"
 		}
 	]
 }

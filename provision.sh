@@ -76,3 +76,17 @@ sudo sysctl vm.swappiness=10
 sudo swapon /swapfile
 echo '/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
 # }}}
+
+# {{{ netdata (metrics)
+git clone https://github.com/firehol/netdata /tmp/netdata
+cd /tmp/netdata
+sudo apt-get -y install zlib1g-dev uuid-dev libmnl-dev gcc make curl git autoconf autogen automake pkg-config netcat-openbsd jq
+sudo ./netdata-installer.sh --dont-wait --dont-start-it
+sudo apt-get purge -y zlib1g-dev uuid-dev libmnl-dev gcc make autoconf autogen automake pkg-config
+cd /
+rm -rf /tmp/netdata
+mv /tmp/netdata.service /etc/systemd/system/netdata.service
+chmod +x /usr/sbin/private-if
+sudo systemctl enable netdata
+# }}}
+
