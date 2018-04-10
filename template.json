@@ -27,6 +27,11 @@
 		},
 		{
 			"type": "file",
+			"source": "journald.conf",
+			"destination": "/etc/systemd/journald.conf"
+		},
+		{
+			"type": "file",
 			"source": "files/private-if",
 			"destination": "/usr/sbin/private-if"
 		},
