@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "file",
-			"source": "journald.conf",
+			"source": "files/journald.conf",
 			"destination": "/etc/systemd/journald.conf"
 		},
 		{
@@ -50,7 +50,7 @@
 		},
 		{
 			"type": "file",
-			"source": "file/netdata.conf",
+			"source": "files/netdata.conf",
 			"destination": "/etc/netdata/netdata.conf"
 		}
 	]
