@@ -1,6 +1,16 @@
 {
 	"builders": [
 		{
+			"name": "docker",
+			"type": "digitalocean",
+			"api_token": "{{user `api_token`}}",
+			"region": "TOR1",
+			"size": "512mb",
+			"image": "ubuntu-16-04-x64",
+			"ssh_username": "root"
+		},
+		{
+			"name": "kubernetes",
 			"type": "digitalocean",
 			"api_token": "{{user `api_token`}}",
 			"region": "TOR1",
@@ -12,21 +22,30 @@
 	"provisioners": [
 		{
 			"type": "file",
-			"source": "netdata.service",
+			"source": "files/netdata.service",
 			"destination": "/tmp/netdata.service"
 		},
 		{
 			"type": "file",
-			"source": "private-if",
+			"source": "files/private-if",
 			"destination": "/usr/sbin/private-if"
 		},
 		{
 			"type": "shell",
-			"script": "provision.sh"
+			"script": "scripts/base.sh"
+		},
+		{
+			"type": "shell",
+			"script": "scripts/swap.sh"
+		},
+		{
+			"type": "shell",
+			"script": "scripts/kubernetes.sh",
+			"only": ["kubernetes"]
 		},
 		{
 			"type": "file",
-			"source": "netdata.conf",
+			"source": "file/netdata.conf",
 			"destination": "/etc/netdata/netdata.conf"
 		}
 	]

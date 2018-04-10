@@ -36,3 +36,22 @@ After that you can just run `certbot-cron` to enable the auto-renew.
 
 source: https://certbot.eff.org/#ubuntutrusty-other
 
+## Kubernetes
+The kubernetes image comes with `kubeadm`, which is a tool that makes setting
+up a custom cluster easier.
+
+On the master:
+```
+kubeadm init --ignore-preflight-errors Swap --pod-network-cidr=10.244.0.0/16
+```
+
+Setup flannel:
+```
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+```
+
+On a node:
+```
+kubeadm join ...
+```
+

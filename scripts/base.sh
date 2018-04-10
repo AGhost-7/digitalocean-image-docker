@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 set -e
 
 sudo apt-get update
@@ -67,15 +66,6 @@ CRON
 sudo chmod +x /etc/cron.hourly/docker-gc
 # }}}
 
-# {{{ swap
-# Add a small swap. 512mb of ram isnt much to play with tbh.
-sudo fallocate -l 500M /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo sysctl vm.swappiness=10
-sudo swapon /swapfile
-echo '/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
-# }}}
 
 # {{{ netdata (metrics)
 git clone https://github.com/firehol/netdata /tmp/netdata
