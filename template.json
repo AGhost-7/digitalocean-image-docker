@@ -2,6 +2,7 @@
 	"builders": [
 		{
 			"name": "docker",
+			"snapshot_name": "{{build_name}}",
 			"type": "digitalocean",
 			"api_token": "{{user `api_token`}}",
 			"region": "TOR1",
@@ -11,6 +12,7 @@
 		},
 		{
 			"name": "kubernetes",
+			"snapshot_name": "{{build_name}}",
 			"type": "digitalocean",
 			"api_token": "{{user `api_token`}}",
 			"region": "TOR1",
