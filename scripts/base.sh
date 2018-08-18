@@ -4,6 +4,16 @@ set -e
 
 sudo apt-get update
 
+# {{{ default firewall
+
+apt-get install ufw -y
+ufw reset
+ufw default allow outgoing
+ufw default deny incoming
+ufw allow ssh
+ufw --force enable
+
+# }}}
 
 # {{{ docker & compose
 
