@@ -11,6 +11,8 @@ ufw reset
 ufw default allow outgoing
 ufw default deny incoming
 ufw allow ssh
+# netdata binds to private interface, so this is fine.
+ufw allow 19999
 ufw --force enable
 
 # }}}
