@@ -73,7 +73,7 @@ sudo chmod +x /usr/local/bin/docker-gc
 
 sudo tee /etc/cron.hourly/docker-gc <<CRON
 #!/usr/bin/env bash
-FORCE_IMAGE_REMOVAL=1 MINIMUM_IMAGES_TO_SAVE=10 /usr/local/bin/docker-gc
+/usr/local/bin/docker-gc
 CRON
 sudo chmod +x /etc/cron.hourly/docker-gc
 # }}}
